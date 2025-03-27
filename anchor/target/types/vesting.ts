@@ -14,6 +14,187 @@ export type Vesting = {
   },
   "instructions": [
     {
+      "name": "claimTokens",
+      "discriminator": [
+        108,
+        216,
+        210,
+        231,
+        0,
+        212,
+        42,
+        64
+      ],
+      "accounts": [
+        {
+          "name": "beneficiary",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "employeeAccount"
+          ]
+        },
+        {
+          "name": "mint",
+          "relations": [
+            "vestingAccount"
+          ]
+        },
+        {
+          "name": "tokenTreasury",
+          "writable": true,
+          "relations": [
+            "vestingAccount"
+          ]
+        },
+        {
+          "name": "vestingAccount",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  101,
+                  115,
+                  116,
+                  105,
+                  110,
+                  103,
+                  95,
+                  97,
+                  99,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "companyName"
+              }
+            ]
+          },
+          "relations": [
+            "employeeAccount"
+          ]
+        },
+        {
+          "name": "employeeAccount",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  109,
+                  112,
+                  108,
+                  111,
+                  121,
+                  101,
+                  101,
+                  95,
+                  118,
+                  101,
+                  115,
+                  116,
+                  105,
+                  110,
+                  103
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "beneficiary"
+              },
+              {
+                "kind": "account",
+                "path": "vestingAccount"
+              }
+            ]
+          }
+        },
+        {
+          "name": "employeeTokenAccount",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "beneficiary"
+              },
+              {
+                "kind": "account",
+                "path": "tokenProgram"
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "tokenProgram"
+        },
+        {
+          "name": "associatedTokenProgram",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        }
+      ],
+      "args": [
+        {
+          "name": "companyName",
+          "type": "string"
+        }
+      ]
+    },
+    {
       "name": "createEmployeeAccount",
       "discriminator": [
         94,
@@ -137,21 +318,21 @@ export type Vesting = {
               {
                 "kind": "const",
                 "value": [
-                  86,
-                  69,
-                  83,
-                  84,
-                  73,
-                  78,
-                  71,
+                  118,
+                  101,
+                  115,
+                  116,
+                  105,
+                  110,
+                  103,
                   95,
-                  65,
-                  67,
-                  67,
-                  79,
-                  85,
-                  78,
-                  84
+                  97,
+                  99,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116
                 ]
               },
               {
@@ -166,6 +347,27 @@ export type Vesting = {
           "writable": true,
           "pda": {
             "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  101,
+                  115,
+                  116,
+                  105,
+                  110,
+                  103,
+                  95,
+                  116,
+                  114,
+                  101,
+                  97,
+                  115,
+                  117,
+                  114,
+                  121
+                ]
+              },
               {
                 "kind": "arg",
                 "path": "companyName"
@@ -208,6 +410,28 @@ export type Vesting = {
         228,
         216
       ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "claimNotAvailableYet",
+      "msg": "Claim not available yet"
+    },
+    {
+      "code": 6001,
+      "name": "invalidVestingPeriod",
+      "msg": "Invalid vesting period"
+    },
+    {
+      "code": 6002,
+      "name": "calculationOverflow",
+      "msg": "Calculation overflow"
+    },
+    {
+      "code": 6003,
+      "name": "nothingToClaim",
+      "msg": "Nothing to claim"
     }
   ],
   "types": [

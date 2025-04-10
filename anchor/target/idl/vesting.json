@@ -213,7 +213,35 @@
           "name": "beneficiary"
         },
         {
-          "name": "vesting_account"
+          "name": "vesting_account",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  101,
+                  115,
+                  116,
+                  105,
+                  110,
+                  103,
+                  95,
+                  97,
+                  99,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "company_name"
+              }
+            ]
+          }
         },
         {
           "name": "employee_account",
@@ -258,6 +286,10 @@
         }
       ],
       "args": [
+        {
+          "name": "_company_name",
+          "type": "string"
+        },
         {
           "name": "start_date",
           "type": "u64"

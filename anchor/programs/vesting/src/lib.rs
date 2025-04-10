@@ -21,7 +21,7 @@ pub mod vesting {
         let vesting_account = &mut ctx.accounts.vesting_account;
         vesting_account.set_inner(VestingAccount {
             owner: ctx.accounts.signer.key(),
-            mint: vesting_account.mint.key(),
+            mint: ctx.accounts.mint.key(),
             token_treasury: ctx.accounts.token_treasury_account.key(),
             company_name,
             treasury_bump: ctx.bumps.token_treasury_account,
@@ -32,6 +32,7 @@ pub mod vesting {
 
     pub fn create_employee_account(
         ctx: Context<CreateEmployeeAccount>,
+        _company_name: String,
         start_date: u64,
         end_date: u64,
         cliff_date: u64,
@@ -63,8 +64,8 @@ pub mod vesting {
 
         let time_since_start = now.saturating_sub(employee_account.start_date as i64);
         let total_vesting_time = employee_account
-            .start_date
-            .saturating_sub(employee_account.end_date);
+            .end_date
+            .saturating_sub(employee_account.start_date);
 
         if total_vesting_time == 0 {
             return Err(ErrorCode::InvalidVestingPeriod.into());
@@ -147,12 +148,15 @@ pub struct CreateVestingAccount<'info> {
 }
 
 #[derive(Accounts)]
+#[instruction(company_name: String)]
 pub struct CreateEmployeeAccount<'info> {
     #[account(mut)]
     pub owner: Signer<'info>,
     pub beneficiary: SystemAccount<'info>,
 
     #[account(
+        seeds = [b"vesting_account", company_name.as_bytes()],
+        bump = vesting_account.bump,
         has_one = owner,
     )]
     pub vesting_account: Account<'info, VestingAccount>,
@@ -181,7 +185,7 @@ pub struct ClaimTokens<'info> {
 
     #[account(
         seeds = [b"vesting_account", company_name.as_bytes()],
-        bump = vesting_account.treasury_bump,
+        bump = vesting_account.bump,
         has_one = token_treasury,
         has_one = mint,
     )]

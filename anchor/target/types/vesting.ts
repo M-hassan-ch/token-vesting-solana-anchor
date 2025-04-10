@@ -219,7 +219,35 @@ export type Vesting = {
           "name": "beneficiary"
         },
         {
-          "name": "vestingAccount"
+          "name": "vestingAccount",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118,
+                  101,
+                  115,
+                  116,
+                  105,
+                  110,
+                  103,
+                  95,
+                  97,
+                  99,
+                  99,
+                  111,
+                  117,
+                  110,
+                  116
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "companyName"
+              }
+            ]
+          }
         },
         {
           "name": "employeeAccount",
@@ -264,6 +292,10 @@ export type Vesting = {
         }
       ],
       "args": [
+        {
+          "name": "companyName",
+          "type": "string"
+        },
         {
           "name": "startDate",
           "type": "u64"
